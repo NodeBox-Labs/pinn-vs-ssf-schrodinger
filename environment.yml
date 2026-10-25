@@ -1,0 +1,20 @@
+
+---
+
+## `environment.yml`
+
+```yaml
+name: pinn-ssf
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pytorch>=2.1
+  - numpy>=1.24
+  - scipy>=1.10
+  - pyyaml
+  - matplotlib
+  - pandas
+  - tqdm
+  - cpuonly   # remove for CUDA

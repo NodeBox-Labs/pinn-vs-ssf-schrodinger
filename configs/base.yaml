@@ -1,0 +1,42 @@
+seed: 42
+device: cpu            # or "cuda"
+
+domain:
+  L: 16.0
+  Nx: 512              # reference grid points
+  T: 4.0
+  dt_ref: 0.001        # reference time step
+
+physics:
+  g: 0.0
+  omega: 1.0           # harmonic trap frequency (0 = free)
+  potential: "none"    # "none" | "harmonic"
+
+pinn:
+  hidden: 128
+  layers: 4
+  activation: tanh
+  use_fourier: false
+  fourier_scale: 1.0
+  fourier_dim: 128
+
+training:
+  iters: 20000
+  lr: 1.0e-3
+  lr_final: 1.0e-5
+  n_collocation: 2000
+  n_ic: 256
+  n_bc: 256
+  log_every: 500
+  eval_every: 1000
+  weighting: fixed       # fixed | gradnorm | self_adaptive
+  lambda_pde: 1.0
+  lambda_ic: 10.0
+  lambda_bc: 10.0
+  causal_weights: false
+  causal_sigma_start: 0.5
+  causal_sigma_growth: 1.0005
+
+output:
+  ckpt_dir: results/checkpoints
+  fig_dir: results/figures
