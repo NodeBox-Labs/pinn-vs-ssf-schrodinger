@@ -1,35 +1,54 @@
 
 import argparse, glob, json, os
+import numpy as np
 import pandas as pd
 
 
-def main(results_dir: str, output: str):
+def aggregate_seeds(results_dir, case):
+    """Collect all JSONs matching case_seed*.json."""
     rows = []
-    for f in sorted(glob.glob(os.path.join(results_dir, "*.json"))):
+    for f in glob.glob(os.path.join(results_dir, f"{case}_seed*.json")):
         with open(f) as fh:
-            m = json.load(fh)
-        rows.append({
-            "case": m["case"],
-            "rel_l2_final": m["rel_l2_final"],
-            "rel_l2_max": m["rel_l2_max"],
-            "norm_drift_max": m["norm_drift_max"],
-            "energy_drift_max": m["energy_drift_max"],
-            "n_params": m["n_params"],
-            "train_time_s": m["train_time_s"],
-            "inference_time_s": m["inference_time_s"],
-        })
+            rows.append(json.load(fh))
+    if not rows:
+        return None
+    return {
+        "case": case,
+        "n_seeds": len(rows),
+        "rel_l2_final_mean": float(np.mean([r["rel_l2_final"] for r in rows])),
+        "rel_l2_final_std": float(np.std([r["rel_l2_final"] for r in rows])),
+        "norm_drift_max_mean": float(np.mean([r["norm_drift_max"] for r in rows])),
+        "norm_drift_max_std": float(np.std([r["norm_drift_max"] for r in rows])),
+        "energy_drift_max_mean": float(np.mean([r["energy_drift_max"] for r in rows])),
+        "energy_drift_max_std": float(np.std([r["energy_drift_max"] for r in rows])),
+    }
+
+
+def main(results_dir, output):
+    cases = sorted(set(
+        os.path.basename(f).split("_seed")[0]
+        for f in glob.glob(os.path.join(results_dir, "*.json"))
+    ))
+    rows = []
+    for c in cases:
+        agg = aggregate_seeds(results_dir, c)
+        if agg:
+            rows.append(agg)
     df = pd.DataFrame(rows)
-    # verdict heuristic
-    def verdict(r):
-        if r["rel_l2_max"] > 0.2 or r["norm_drift_max"] > 5e-2:
-            return "FAIL"
-        if r["rel_l2_max"] > 5e-2:
-            return "BORDERLINE"
-        return "PASS"
-    df["verdict"] = df.apply(verdict, axis=1)
+
+    # baseline: data-driven MLP (no physics) — load from baseline_results.json
+    baseline_path = os.path.join(results_dir, "baseline_data_driven.json")
+    if os.path.exists(baseline_path):
+        with open(baseline_path) as f:
+            baseline = json.load(f)
+        df["data_mlp_rel_l2"] = df["case"].map(
+            lambda c: baseline.get(c, {}).get("rel_l2_final", np.nan))
+
     os.makedirs(os.path.dirname(output), exist_ok=True)
     df.to_csv(output, index=False)
     print(df.to_string(index=False))
+    print("\nReported as mean ± std over seeds. "
+          "Data-MLP column is the no-physics baseline.")
 
 
 if __name__ == "__main__":
