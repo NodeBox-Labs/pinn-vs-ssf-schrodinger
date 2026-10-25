@@ -267,7 +267,42 @@ These four mechanisms are *additive*, which is why solitons on long horizons (d2
 **No ablation turns a ❌ into a ✅.** We report this honestly rather than cherry-picking.
 
 ---
+## Contributors
 
+This benchmark was built to be rigorous, reproducible, and honest about failures. 
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/YOUR_USERNAME">
+        <img src="https://avatars.githubusercontent.com/u/YOUR_USER_ID?v=4" width="100px;" alt="Your Name"/>
+        <br />
+        <sub><b>Your Name</b></sub>
+      </a>
+      <br />
+      <sub>💻 📖 🛠️</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/YOUR_COLLABORATOR">
+        <img src="https://avatars.githubusercontent.com/u/YOUR_COLLABORATOR_ID?v=4" width="100px;" alt="Collaborator"/>
+        <br />
+        <sub><b>Collaborator</b></sub>
+      </a>
+      <br />
+      <sub>🔬 📊</sub>
+    </td>
+  </tr>
+</table>
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+### How to contribute
+
+We welcome contributions that extend the failure analysis or add new baselines. 
+
+1. **Found a case where the PINN actually succeeds?** Open an issue with the config and the seed. We want to know.
+2. **Fixing a bug?** Fork, make your changes, and submit a PR. Please run `bash scripts/run_all.sh` locally to ensure your changes don't break the deterministic results.
+3. **Adding a new PDE / case?** Drop a new YAML into `configs/`, update `scripts/run_all.sh`, and submit a PR.
 ## Reproducibility
 
 - **Seeds.** `torch.manual_seed(42)`, `np.random.seed(42)`, `random.seed(42)` in `src/train.py`.
