@@ -1,0 +1,9 @@
+inherit: base.yaml
+case: d2_moving_soliton
+domain: { L: 40.0, Nx: 1024, T: 4.0, dt_ref: 0.0005 }
+physics: { g: -1.0, omega: 0.0, potential: "none" }
+initial:
+  kind: soliton
+  eta: 1.0
+  v: 1.0
+  x0: -5.0

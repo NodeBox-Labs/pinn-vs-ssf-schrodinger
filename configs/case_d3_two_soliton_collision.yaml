@@ -1,0 +1,9 @@
+inherit: base.yaml
+case: d3_two_soliton_collision
+domain: { L: 60.0, Nx: 1024, T: 8.0, dt_ref: 0.0005 }
+physics: { g: -1.0, omega: 0.0, potential: "none" }
+initial:
+  kind: two_solitons
+  eta: 1.0
+  v: 0.5
+  x0: 3.0

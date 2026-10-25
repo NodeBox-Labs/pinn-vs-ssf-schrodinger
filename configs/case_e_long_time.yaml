@@ -1,0 +1,11 @@
+inherit: base.yaml
+case: e_long_time
+domain: { L: 40.0, Nx: 1024, T: 20.0, dt_ref: 0.001 }
+physics: { g: 0.0, omega: 0.0, potential: "none" }
+initial:
+  kind: free_gaussian
+  x0: 0.0
+  k0: 0.0
+  width: 1.0
+training:
+  iters: 30000
