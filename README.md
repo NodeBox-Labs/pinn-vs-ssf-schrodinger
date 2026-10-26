@@ -338,7 +338,7 @@ We welcome contributions that extend the failure analysis or add new baselines.
             Gross-Pitaevskii Equation: An Honest Benchmark},
   author = {PINN-SSF Benchmark Authors},
   year   = {2025},
-  url    = {https://github.com/<you>/pinn-vs-ssf-schrodinger}
+  url    = {https://github.com/NodeBox-Labs/pinn-vs-ssf-schrodinger}
 }
 ```
 
