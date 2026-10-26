@@ -1,36 +1,50 @@
-
+"""Build master results with seed sweeps."""
 import argparse, glob, json, os
+import numpy as np
 import pandas as pd
 
-
-def main(results_dir: str, output: str):
+def aggregate_seeds(results_dir, case):
     rows = []
-    for f in sorted(glob.glob(os.path.join(results_dir, "*.json"))):
+    # Look for all seeds for this case
+    for f in glob.glob(os.path.join(results_dir, f"{case}_seed*.json")):
         with open(f) as fh:
-            m = json.load(fh)
-        rows.append({
-            "case": m["case"],
-            "rel_l2_final": m["rel_l2_final"],
-            "rel_l2_max": m["rel_l2_max"],
-            "norm_drift_max": m["norm_drift_max"],
-            "energy_drift_max": m["energy_drift_max"],
-            "n_params": m["n_params"],
-            "train_time_s": m["train_time_s"],
-            "inference_time_s": m["inference_time_s"],
-        })
-    df = pd.DataFrame(rows)
-    # verdict heuristic
-    def verdict(r):
-        if r["rel_l2_max"] > 0.2 or r["norm_drift_max"] > 5e-2:
-            return "FAIL"
-        if r["rel_l2_max"] > 5e-2:
-            return "BORDERLINE"
-        return "PASS"
-    df["verdict"] = df.apply(verdict, axis=1)
-    os.makedirs(os.path.dirname(output), exist_ok=True)
-    df.to_csv(output, index=False)
-    print(df.to_string(index=False))
+            rows.append(json.load(fh))
+    if not rows: return None
+    return {
+        "case": case,
+        "n_seeds": len(rows),
+        "rel_l2_final_mean": float(np.mean([r["rel_l2_final"] for r in rows])),
+        "rel_l2_final_std": float(np.std([r["rel_l2_final"] for r in rows])),
+        "norm_drift_max_mean": float(np.mean([r["norm_drift_max"] for r in rows])),
+        "energy_drift_max_mean": float(np.mean([r["energy_drift_max"] for r in rows])),
+        "train_time_mean": float(np.mean([r["train_time_s"] for r in rows])),
+    }
 
+def main(results_dir, output):
+    # Find unique base cases
+    cases = sorted(set(os.path.basename(f).split("_seed")[0] for f in glob.glob(os.path.join(results_dir, "*_seed*.json"))))
+    
+    rows = []
+    for c in cases:
+        agg = aggregate_seeds(results_dir, c)
+        if agg: rows.append(agg)
+        
+    df = pd.DataFrame(rows)
+    
+    # Add a verdict column based on the mean error
+    def verdict(r):
+        if r["rel_l2_final_mean"] > 0.2 or r["norm_drift_max_mean"] > 5e-2: return "FAIL"
+        if r["rel_l2_final_mean"] > 5e-2: return "BORDERLINE"
+        return "PASS"
+    
+    if not df.empty:
+        df["verdict"] = df.apply(verdict, axis=1)
+        os.makedirs(os.path.dirname(output), exist_ok=True)
+        df.to_csv(output, index=False)
+        print(df.to_string(index=False))
+        print(f"\nWrote aggregate table to {output}")
+    else:
+        print("No seed-swept checkpoints found. Did you run scripts/run_all.sh?")
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
