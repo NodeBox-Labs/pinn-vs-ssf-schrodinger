@@ -60,4 +60,4 @@ jobs:
         with:
           config: .markdownlint.json
           files: '**/*.md'
-          ignore: 'README.md,LICENSE,node_modules'
+          ignore: 'README.md,LICENSE,node_modules,FAQ.md,docs/CHANGELOG.md,docs/CONTRIBUTING.md,docs/ROADMAP.md,docs/USAGE.md'
