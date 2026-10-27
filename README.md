@@ -80,20 +80,25 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 ---
 
-## Table of contents
+### Table of contents
 
-1. [Repository layout](#repository-layout)
-2. [Quickstart](#quickstart)
-3. [The physics](#the-physics)
-4. [The reference solver](#the-reference-solver)
-5. [The PINN](#the-pinn)
+1. [TL;DR](#tldr)
+2. [Quick Demo (Colab)](#-quick-demo-no-training-required)
+3. [Gallery](#gallery)
+4. [Repository layout](#repository-layout)
+5. [Quickstart](#quickstart)
 6. [Test cases](#test-cases)
 7. [Results](#results)
 8. [Failure analysis](#failure-analysis)
-9. [Ablations — what does and does not help](#ablations)
+9. [Ablations](#ablations)
 10. [Reproducibility](#reproducibility)
-11. [Citation](#citation)
-12. [License](#license)
+11. [Related work](docs/RELATED_WORK.md)
+12. [FAQ](docs/FAQ.md)
+13. [Limitations](docs/LIMITATIONS.md)
+14. [Roadmap](docs/ROADMAP.md)
+15. [Contributors](#contributors)
+16. [Citation](#how-to-cite)
+17. [License](#license)
 
 ---
 
@@ -329,7 +334,16 @@ We welcome contributions that extend the failure analysis or add new baselines.
 - **Runtime.** All 7 cases: ~2.5 hours on CPU, ~20 minutes on a single GPU.
 
 ---
+## 🚀 Quick Demo (No Training Required)
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NodeBox-Labs/pinn-vs-ssf-schrodinger/blob/main/notebooks/01_quickstart_and_gallery.ipynb)
+
+Click the badge above to load the pre-computed results and see the PINN failure on the two-soliton case in **under 60 seconds** — no GPU, no training required.
+
+
+## 📦 Pre-trained Checkpoints
+
+Trained checkpoints (3 seeds × 7 cases) are attached to the [v1.0.0 release](https://github.com/NodeBox-Labs/pinn-vs-ssf-schrodinger/releases/tag/v1.0.0). Download `checkpoints-v1.0.0.zip` if you want to inspect results without retraining.
 ## Citation
 
 If you use this benchmark, the solver, or the failure analysis in your research, please cite it:
@@ -344,7 +358,7 @@ If you use this benchmark, the solver, or the failure analysis in your research,
   version      = {v1.0.0},
   url          = {https://github.com/NodeBox-Labs/pinn-vs-ssf-schrodinger}
 }
-
+```
 ---
 
 ## License
