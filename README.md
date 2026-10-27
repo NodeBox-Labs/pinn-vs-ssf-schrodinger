@@ -344,7 +344,7 @@ If you use this benchmark, the solver, or the failure analysis in your research,
   version      = {v1.0.0},
   url          = {https://github.com/NodeBox-Labs/pinn-vs-ssf-schrodinger}
 }
-
+```
 ---
 
 ## License
