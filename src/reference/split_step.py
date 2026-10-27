@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import numpy as np
 
 
@@ -46,7 +47,7 @@ def initial_condition(x: np.ndarray, cfg: dict) -> np.ndarray:
         return s1 + s2
     raise ValueError(kind)
 
-       
+
     if kind == "two_solitons":
         # Two exact solitons each with A = 0.5 for g = -0.25 each; total g = -1
         # Simplest fix: use A = 0.5 per soliton and let them interact.
