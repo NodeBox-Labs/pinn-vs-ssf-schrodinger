@@ -1,13 +1,14 @@
 """PDE residual loss via autograd."""
 import torch
 
+
 def pde_residual(model, x, t, V_fn, g, psi0_real, psi0_imag):
     """Return (Ru, Rv), the real/imag residuals of
     i ψ_t + ½ ψ_xx - V ψ - g|ψ|² ψ = 0.
     """
     x = x.clone().requires_grad_(True)
     t = t.clone().requires_grad_(True)
-    
+
     # The model now requires psi0 to apply the hard IC constraint
     u, v = model(x, t, psi0_real, psi0_imag)
 

@@ -33,6 +33,6 @@ def exact_bright_soliton(x, t, v=0.0, x0=0.0, g=-1.0):
 
 def exact_two_soliton(x, t):
     """Placeholder for a true 2-soliton solution (requires complex phase matching)."""
-    # Note: A true 2-soliton collision is complex to write analytically. 
+    # Note: A true 2-soliton collision is complex to write analytically.
     # For validation, we recommend passing the SSF solver through itself at higher Nx/dt.
     pass

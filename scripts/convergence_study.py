@@ -1,14 +1,17 @@
-import os, sys, time
+import os
+import sys
+import time
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-import numpy as np
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from src.reference.split_step import (make_grid, potential, initial_condition,
-                                      _normalize, split_step)
-from src.reference.yoshida import split_step_yoshida
 from src.reference.analytic import free_gaussian
+from src.reference.split_step import _normalize, make_grid, split_step
+from src.reference.yoshida import split_step_yoshida
 
 
 def run_ssf(dt, Nx, T=2.0, L=20.0, order=2):

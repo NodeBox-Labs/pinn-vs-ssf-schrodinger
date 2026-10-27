@@ -1,8 +1,12 @@
-import argparse, json, os
-import numpy as np
+import argparse
+import os
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
 from src.metrics import spectral_error
 
 

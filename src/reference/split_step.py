@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import numpy as np
 
 
@@ -32,7 +33,7 @@ def initial_condition(x: np.ndarray, cfg: dict) -> np.ndarray:
         # Correct norm-1 soliton
         A = 0.5
         return (A / np.cosh(A * (x - x0))) * np.exp(1j * v * x)
-        
+
     if kind == "two_solitons":
         # True norm is 1.0 overall, so A = 0.25 each for the 2-soliton test
         A = 0.25

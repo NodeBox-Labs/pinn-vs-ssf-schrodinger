@@ -1,6 +1,8 @@
-import pandas as pd
 import os
 import re
+
+import pandas as pd
+
 
 def generate_markdown_table(csv_path):
     if not os.path.exists(csv_path):
@@ -8,20 +10,20 @@ def generate_markdown_table(csv_path):
         return ""
 
     df = pd.read_csv(csv_path)
-    
+
     # Format numbers for display
     df["Rel-L2"] = df["rel_l2_final_mean"].apply(lambda x: f"{x:.2e}")
     df["Norm Drift"] = df["norm_drift_max_mean"].apply(lambda x: f"{x:.2e}")
     df["Train (s)"] = df["train_time_mean"].apply(lambda x: f"{x:.0f}")
-    
+
     # Select and rename columns for the table
     display_df = df[["case", "Rel-L2", "Norm Drift", "Train (s)", "verdict"]].copy()
     display_df.columns = ["Case", "Rel-L2 (mean)", "Norm Drift (mean)", "Train (s)", "Verdict"]
-    
+
     # Map verdicts to emojis
     verdict_map = {"PASS": "✅", "BORDERLINE": "⚠️", "FAIL": "❌"}
     display_df["Verdict"] = display_df["Verdict"].map(verdict_map)
-    
+
     return display_df.to_markdown(index=False)
 
 def update_readme(csv_path, readme_path):
@@ -29,7 +31,7 @@ def update_readme(csv_path, readme_path):
     if not md_table:
         return
 
-    with open(readme_path, "r") as f:
+    with open(readme_path) as f:
         content = f.read()
 
     start_marker = "<!-- AUTO-GENERATED-RESULTS-START -->"

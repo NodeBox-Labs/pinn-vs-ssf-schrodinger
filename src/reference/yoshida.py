@@ -1,6 +1,6 @@
 from __future__ import annotations
-import numpy as np
 
+import numpy as np
 
 YOSHIDA_W1 = 1.0 / (2.0 - 2.0 ** (1.0 / 3.0))
 YOSHIDA_W0 = -2.0 ** (1.0 / 3.0) / (2.0 - 2.0 ** (1.0 / 3.0))

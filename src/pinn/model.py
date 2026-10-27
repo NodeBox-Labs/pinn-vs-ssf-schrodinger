@@ -7,6 +7,7 @@ Uses:
 This forces the network to satisfy IC and BC exactly, without soft loss penalties.
 """
 import math
+
 import torch
 import torch.nn as nn
 
@@ -32,16 +33,16 @@ class HardConstraintPINN(nn.Module):
         super().__init__()
         self.L = L
         self.use_fourier = use_fourier
-        
+
         # Input dim is 3: sin(theta), cos(theta), t
         in_dim = 3
         if use_fourier:
             # Fourier features applied to the embedded (sin, cos, t) coordinates
             self.ff = FourierFeatures(3, fourier_dim, fourier_scale, seed=seed)
             in_dim = 2 * fourier_dim
-            
+
         act_cls = {"tanh": nn.Tanh, "sin": nn.SiLU, "gelu": nn.GELU}[activation]
-        
+
         mods = []
         d = in_dim
         for _ in range(layers):
@@ -56,17 +57,17 @@ class HardConstraintPINN(nn.Module):
         # Maps x in [-L/2, L/2] to an angle [0, 2pi]
         theta = 2.0 * math.pi * x / self.L
         z = torch.cat([torch.sin(theta), torch.cos(theta), t], dim=-1)
-        
+
         if self.use_fourier:
             z = self.ff(z)
-            
+
         # 2. Raw network output
         raw = self.net(z)
         u_raw, v_raw = raw[..., 0:1], raw[..., 1:2]
-        
+
         # 3. Hard Initial Condition Ansatz
         # ψ(x,0) = ψ0(x) + 0 * N(x,0) = ψ0(x)
         u = psi0_real + t * u_raw
         v = psi0_imag + t * v_raw
-        
+
         return u, v

@@ -1,8 +1,11 @@
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import numpy as np
-from src.reference.split_step import make_grid, split_step, _normalize
-from src.reference.analytic import free_gaussian, coherent_state
+
+from src.reference.analytic import coherent_state, free_gaussian
+from src.reference.split_step import _normalize, initial_condition, make_grid, split_step
 
 
 def test_free_gaussian():
@@ -12,8 +15,7 @@ def test_free_gaussian():
     psi0 = free_gaussian(x, 0.0, x0=0.0, k0=0.0, sigma=1.0)
     psi0 = _normalize(psi0, dx)
     n = 1000
-    _, snaps = split_step(psi0, x, k, T / n, n, np.zeros_like(x), 0.0,
-                          snapshot_every=n)
+    _, snaps = split_step(psi0, x, k, T / n, n, np.zeros_like(x), 0.0,snapshot_every=n)
     psi_num = snaps[-1]
     psi_exact = free_gaussian(x, T, x0=0.0, k0=0.0, sigma=1.0)
     psi_exact = _normalize(psi_exact, dx)
@@ -45,15 +47,15 @@ def test_soliton_stationarity():
     L, Nx, T = 40.0, 1024, 4.0
     x, k = make_grid(L, Nx)
     dx = x[1] - x[0]
-    
+
     # Stationary soliton (v=0)
     psi0 = initial_condition(x, {"kind": "soliton", "v": 0.0})
     psi0 = _normalize(psi0, dx)
-    
+
     n = 1000
     _, snaps = split_step(psi0, x, k, T / n, n, np.zeros_like(x), -1.0, snapshot_every=n)
     psi_final = snaps[-1]
-    
+
     err = np.sqrt(np.sum(np.abs(psi_final - psi0) ** 2) * dx)
     print(f"Soliton stationarity error (t=4): {err:.2e}")
     assert err < 1e-4, "Soliton is not stationary! Check initial conditions."

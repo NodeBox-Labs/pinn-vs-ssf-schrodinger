@@ -1,8 +1,11 @@
-import argparse, sys, os
+import argparse
+import os
+import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import numpy as np
-from src.reference.split_step import (make_grid, potential, initial_condition,
-                                     _normalize, split_step)
+
+from src.reference.split_step import _normalize, initial_condition, make_grid, potential, split_step
 
 CFG = {
     "domain": {"L": 20.0, "Nx": 512, "T": 2.0},

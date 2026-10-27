@@ -4,6 +4,7 @@ import glob
 import json
 import os
 import re
+
 import numpy as np
 import pandas as pd
 
@@ -55,7 +56,7 @@ def update_readme_table(csv_path, readme_path):
         # Fallback if `tabulate` is not installed
         md_table = df.to_string(index=False)
 
-    with open(readme_path, "r") as f:
+    with open(readme_path) as f:
         content = f.read()
 
     start_marker = "<!-- AUTO-GENERATED-RESULTS-START -->"
