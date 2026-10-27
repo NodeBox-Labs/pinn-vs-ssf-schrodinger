@@ -18,4 +18,6 @@
 
 ## Q: How do I add my own case?
 
-**A:** Drop a YAML into `configs/`, update `scripts/run_all.sh`, and submit a PR. See `CONTRIBUTING.md`."" 
+**A:** Drop a YAML into `configs/`, update `scripts/run_all.sh`, and submit a PR. See `CONTRIBUTING.md`.
+
+
