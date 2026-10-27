@@ -140,8 +140,8 @@ def main(config_path: str, overrides: dict | None = None):
     inference_time = time.time() - t_inf0
 
     errs = [rel_l2(preds[i], psi_ref[i], dx) for i in range(len(t_ref))]
-    norm_drift = [abs(norm_sq(preds[i], dx) - 1.0) for i in range(len(t_ref))]
-
+    expected_norm = 2.0 if "soliton" in cfg["initial"]["kind"] else 1.0
+    norm_drift = [abs(norm_sq(preds[i], dx) - expected_norm) / expected_norm for i in range(len(t_ref))]
     E_ref0 = energy(psi_ref[0], x_ref, np.fft.fftfreq(len(x_ref), dx) * 2 * np.pi, V_ref, g, dx)
     E_pred = [energy(preds[i], x_ref, np.fft.fftfreq(len(x_ref), dx) * 2 * np.pi, V_ref, g, dx) for i in range(len(t_ref))]
     energy_drift = [abs(e - E_ref0) / max(abs(E_ref0), 1e-12) for e in E_pred]

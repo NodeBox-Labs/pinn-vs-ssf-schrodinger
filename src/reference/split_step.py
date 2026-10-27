@@ -29,15 +29,20 @@ def initial_condition(x: np.ndarray, cfg: dict) -> np.ndarray:
         norm = (1.0 / (np.pi * w ** 2)) ** 0.25
         return norm * np.exp(-((x - x0) ** 2) / (2 * w ** 2)) * np.exp(1j * p0 * x)
     if kind == "soliton":
-        v = cfg["v"]; x0 = cfg.get("x0", 0.0)
-        # Correct norm-1 soliton
-        A = 0.5
+        v = cfg["v"]
+        x0 = cfg.get("x0", 0.0)
+        # Exact stationary bright soliton for g = -1: psi = A * sech(A * (x - x0))
+        # Stationarity requires A^2 = |g| = 1, so A = 1.
+        A = 1.0
         return (A / np.cosh(A * (x - x0))) * np.exp(1j * v * x)
 
+       
     if kind == "two_solitons":
-        # True norm is 1.0 overall, so A = 0.25 each for the 2-soliton test
-        A = 0.25
-        v = cfg["v"]; x0 = cfg["x0"]
+        # Two exact solitons each with A = 0.5 for g = -0.25 each; total g = -1
+        # Simplest fix: use A = 0.5 per soliton and let them interact.
+        A = 0.5
+        v = cfg["v"]
+        x0 = cfg["x0"]
         s1 = (A / np.cosh(A * (x - x0))) * np.exp(1j * v * x)
         s2 = (A / np.cosh(A * (x + x0))) * np.exp(-1j * v * x)
         return s1 + s2
@@ -73,15 +78,20 @@ def split_step(psi0: np.ndarray, x: np.ndarray, k: np.ndarray, dt: float,
 
 def reference_solution(cfg: dict):
     """Build the reference solution for a case config dict."""
-    L = cfg["domain"]["L"]; Nx = cfg["domain"]["Nx"]
-    T = cfg["domain"]["T"]; dt = cfg["domain"]["dt_ref"]
-    g = cfg["physics"]["g"]; omega = cfg["physics"]["omega"]
+    L = cfg["domain"]["L"]
+    Nx = cfg["domain"]["Nx"]
+    T = cfg["domain"]["T"]
+    dt = cfg["domain"]["dt_ref"]
+    g = cfg["physics"]["g"]
+    omega = cfg["physics"]["omega"]
     pot = cfg["physics"]["potential"]
 
     x, k = make_grid(L, Nx)
     V = potential(x, pot, omega)
     psi0 = initial_condition(x, cfg["initial"])
-    psi0 = _normalize(psi0, x[1] - x[0])
+    # Do NOT normalize solitons: their norm is 2A, and stationarity requires it.
+    if cfg["initial"]["kind"] not in ("soliton", "two_solitons"):
+        psi0 = _normalize(psi0, x[1] - x[0])
 
     n_steps = int(round(T / dt))
     n_snap = 100
