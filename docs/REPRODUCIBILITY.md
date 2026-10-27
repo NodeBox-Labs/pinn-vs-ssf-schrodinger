@@ -1,3 +1,4 @@
+
 # Reproducibility Binder
 
 This document records the exact conditions under which the benchmark results in `results/tables/master_results.csv` were produced.
@@ -32,6 +33,3 @@ In `src/train.py`:
 ```python
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
-
-
-
