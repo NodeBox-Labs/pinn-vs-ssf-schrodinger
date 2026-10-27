@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import numpy as np
 
 
@@ -20,21 +19,32 @@ def potential(x: np.ndarray, kind: str = "none", omega: float = 1.0) -> np.ndarr
 
 def initial_condition(x: np.ndarray, cfg: dict) -> np.ndarray:
     kind = cfg["kind"]
-    if kind == "free_gaussian" or kind == "gaussian":
-        x0 = cfg.get("x0", 0.0); k0 = cfg.get("k0", 0.0); w = cfg.get("width", 1.0)
+    if kind in ("free_gaussian", "gaussian"):
+        x0 = cfg.get("x0", 0.0)
+        k0 = cfg.get("k0", 0.0)
+        w = cfg.get("width", 1.0)
         norm = (1.0 / (np.pi * w ** 2)) ** 0.25
         return norm * np.exp(-((x - x0) ** 2) / (2 * w ** 2)) * np.exp(1j * k0 * x)
     if kind == "coherent":
-        x0 = cfg.get("x0", 0.0); p0 = cfg.get("p0", 0.0); w = cfg.get("width", 1.0)
+        x0 = cfg.get("x0", 0.0)
+        p0 = cfg.get("p0", 0.0)
+        w = cfg.get("width", 1.0)
         norm = (1.0 / (np.pi * w ** 2)) ** 0.25
         return norm * np.exp(-((x - x0) ** 2) / (2 * w ** 2)) * np.exp(1j * p0 * x)
     if kind == "soliton":
         v = cfg["v"]
         x0 = cfg.get("x0", 0.0)
-        # Exact stationary bright soliton for g = -1: psi = A * sech(A * (x - x0))
-        # Stationarity requires A^2 = |g| = 1, so A = 1.
+        # Stationary bright soliton for g=-1: A=1, so A^2=|g|.
         A = 1.0
         return (A / np.cosh(A * (x - x0))) * np.exp(1j * v * x)
+    if kind == "two_solitons":
+        v = cfg["v"]
+        x0 = cfg["x0"]
+        A = 1.0
+        s1 = (A / np.cosh(A * (x - x0))) * np.exp(1j * v * x)
+        s2 = (A / np.cosh(A * (x + x0))) * np.exp(-1j * v * x)
+        return s1 + s2
+    raise ValueError(kind)
 
        
     if kind == "two_solitons":
@@ -55,21 +65,17 @@ def _normalize(psi: np.ndarray, dx: float) -> np.ndarray:
     return psi / n if n > 0 else psi
 
 
-def split_step(psi0: np.ndarray, x: np.ndarray, k: np.ndarray, dt: float,
-               n_steps: int, V: np.ndarray, g: float,
-               snapshot_every: int = 100, save_all: bool = False):
-    """Evolve with Strang splitting. Returns (times, snapshots)."""
-    dx = x[1] - x[0]
+def split_step(psi0, x, k, dt, n_steps, V, g, snapshot_every=100, save_all=False):
     psi = psi0.copy()
-    kinetic_half = np.exp(-0.5j * (k ** 2) * dt)            # exp(-i T dt)
+    kinetic_half = np.exp(-0.5j * (k ** 2) * dt)
     times = [0.0]
     snaps = [psi.copy()]
     for n in range(1, n_steps + 1):
         Veff = V + g * np.abs(psi) ** 2
-        psi = psi * np.exp(-0.5j * Veff * dt)               # half potential
-        psi = np.fft.ifft(kinetic_half * np.fft.fft(psi))   # full kinetic
+        psi = psi * np.exp(-0.5j * Veff * dt)
+        psi = np.fft.ifft(kinetic_half * np.fft.fft(psi))
         Veff = V + g * np.abs(psi) ** 2
-        psi = psi * np.exp(-0.5j * Veff * dt)               # half potential
+        psi = psi * np.exp(-0.5j * Veff * dt)
         if save_all or n % snapshot_every == 0:
             times.append(n * dt)
             snaps.append(psi.copy())
@@ -77,7 +83,6 @@ def split_step(psi0: np.ndarray, x: np.ndarray, k: np.ndarray, dt: float,
 
 
 def reference_solution(cfg: dict):
-    """Build the reference solution for a case config dict."""
     L = cfg["domain"]["L"]
     Nx = cfg["domain"]["Nx"]
     T = cfg["domain"]["T"]
@@ -89,7 +94,7 @@ def reference_solution(cfg: dict):
     x, k = make_grid(L, Nx)
     V = potential(x, pot, omega)
     psi0 = initial_condition(x, cfg["initial"])
-    # Do NOT normalize solitons: their norm is 2A, and stationarity requires it.
+    # Skip normalization for solitons: norm is 2A, stationarity requires it.
     if cfg["initial"]["kind"] not in ("soliton", "two_solitons"):
         psi0 = _normalize(psi0, x[1] - x[0])
 
