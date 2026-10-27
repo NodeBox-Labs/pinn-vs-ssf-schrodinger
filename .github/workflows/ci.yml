@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff pytest pytest-cov tabulate
+
+      - name: Lint with ruff
+        run: |
+          ruff check src/ tests/ scripts/
+
+      - name: Type-check with mypy
+        run: |
+          pip install mypy
+          mypy src/ --ignore-missing-imports || true
+
+      - name: Run solver tests
+        run: |
+          python tests/test_reference_convergence.py --case a
+          python tests/test_solver_against_analytic.py
+
+      - name: Run unit tests
+        run: |
+          pytest tests/ -v --cov=src --cov-report=term-missing
+
+      - name: Smoke training (30s budget)
+        run: |
+          python src/train.py --config configs/case_a_free_gaussian.yaml \
+            --override training.iters=50 training.log_every=10
+
+  lint-markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: articulate/actions-markdownlint@v1
+        with:
+          config: .markdownlint.json
