@@ -104,7 +104,7 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 ## Repository layout
 
-```
+```text
 .
 ├── README.md
 ├── environment.yml
@@ -263,6 +263,9 @@ If we compare the PINN to the Strang split-step Fourier solver used as ground tr
 1. **PINNs are not competitive for 1D spectral problems.** The split-step solver reaches machine precision (`1e-8`) in fractions of a second. The PINN takes minutes and achieves only `1e-2` to `1e-1` accuracy. 
 2. **Inference speed is a moot point.** The PINN infers in ~1.9 ms (a forward pass), but the classical solver is already fast enough that this provides no practical advantage.
 3. **The true value of this repo** is not in building a faster GPE solver, but in rigorously documenting *why* PINNs fail on this PDE class (spectral bias, phase accumulation), which informs their use in higher-dimensional domains where Fourier solvers become intractable.
+
+---
+
 ## Failure analysis
 
 Full discussion in [`results/figures/failure/ANALYSIS.md`](results/figures/failure/ANALYSIS.md). Summary:
@@ -273,6 +276,7 @@ Full discussion in [`results/figures/failure/ANALYSIS.md`](results/figures/failu
 4. **Phase accumulation.** Over long horizons even a tiny residual causes a linear drift in the packet's phase velocity → position error grows like $t$.
 
 These four mechanisms are *additive*, which is why solitons on long horizons (d2, d3) are the worst failures.
+
 
 ---
 
@@ -289,34 +293,33 @@ These four mechanisms are *additive*, which is why solitons on long horizons (d2
 > **Compute Note:** Enabling Fourier features or causal weighting increases training time by 15–30% without turning failures into successes. This confirms that the bottleneck is not the loss landscape, but the fundamental spectral bias of coordinate MLPs.
 
 ---
+
+## Reproducibility
+
+- **Seeds.** `torch.manual_seed(42)`, `np.random.seed(42)`, `random.seed(42)` in `src/train.py`.
+- **Determinism.** `torch.backends.cudnn.deterministic = True` and `benchmark = False` are set for GPU runs.
+- **Solver.** Split-step is deterministic (no randomness).
+- **Hardware.** Results shown were produced on CPU (Intel i7) and verified within ±5% on an NVIDIA RTX 3060. Qualitative pass/fail verdicts are stable across hardware.
+- **Runtime.** All 7 cases: ~2.5 hours on CPU, ~20 minutes on a single GPU.
+
+
+---
 ## Contributors
+This benchmark was built to be rigorous, reproducible, and honest about failures.
 
-This benchmark was built to be rigorous, reproducible, and honest about failures. 
-
-<!-- ALL-CONTRIBUTORS-LIST:START -->
 <table>
   <tr>
     <td align="center">
-      <a href="https://github.com/YOUR_USERNAME">
-        <img src="https://avatars.githubusercontent.com/u/YOUR_USER_ID?v=4" width="100px;" alt="Your Name"/>
+      <a href="https://github.com/ZitouniNidhal">
+        <img src="https://github.com/ZitouniNidhal.png" width="100px;" alt="Zitouni Nidhal"/>
         <br />
-        <sub><b>Your Name</b></sub>
+        <sub><b>Zitouni Nidhal</b></sub>
       </a>
       <br />
-      <sub>💻 📖 🛠️</sub>
-    </td>
-    <td align="center">
-      <a href="https://github.com/YOUR_COLLABORATOR">
-        <img src="https://avatars.githubusercontent.com/u/YOUR_COLLABORATOR_ID?v=4" width="100px;" alt="Collaborator"/>
-        <br />
-        <sub><b>Collaborator</b></sub>
-      </a>
-      <br />
-      <sub>🔬 📊</sub>
+      <sub>💻 📖 🛠️ 🔬</sub>
     </td>
   </tr>
 </table>
-<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ### How to contribute
 
@@ -340,10 +343,14 @@ We welcome contributions that extend the failure analysis or add new baselines.
 
 Click the badge above to load the pre-computed results and see the PINN failure on the two-soliton case in **under 60 seconds** — no GPU, no training required.
 
+---
 
 ## 📦 Pre-trained Checkpoints
 
 Trained checkpoints (3 seeds × 7 cases) are attached to the [v1.0.0 release](https://github.com/NodeBox-Labs/pinn-vs-ssf-schrodinger/releases/tag/v1.0.0). Download `checkpoints-v1.0.0.zip` if you want to inspect results without retraining.
+
+---
+
 ## Citation
 
 If you use this benchmark, the solver, or the failure analysis in your research, please cite it:
@@ -359,6 +366,7 @@ If you use this benchmark, the solver, or the failure analysis in your research,
   url          = {https://github.com/NodeBox-Labs/pinn-vs-ssf-schrodinger}
 }
 ```
+
 ---
 
 ## License

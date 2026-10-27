@@ -53,4 +53,4 @@ the README is contextualized here.
   ~2.5 hours on CPU.
 - **Package versions are pinned in `requirements.txt` but not hashed.**
   Future installs may resolve slightly differently. A full lock file
-  (`pip freeze > requirements.lock`) is recommended for archival.
+  (`pip freeze > requirements.lock`) is recommended for archival."" 

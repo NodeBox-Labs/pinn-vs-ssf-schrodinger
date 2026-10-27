@@ -42,4 +42,4 @@ on the 1D Gross-Pitaevskii Equation."
 5. **Why?** Spectral bias, phase accumulation, non-convex residual.
 6. **Implications.** PINNs are useful for inverse problems and
    irregular geometry, not for spectral benchmarks in 1D.
-7. **Reproducibility.** All code, configs, seeds in the public repo.
+7. **Reproducibility.** All code, configs, seeds in the public repo."" 
