@@ -1,7 +1,6 @@
 # Reproducibility Binder
 
-This document records the exact conditions under which the benchmark results
-in `results/tables/master_results.csv` were produced.
+This document records the exact conditions under which the benchmark results in `results/tables/master_results.csv` were produced.
 
 ## Hardware & Software
 
@@ -20,6 +19,7 @@ in `results/tables/master_results.csv` were produced.
 All stochastic elements use seed **42**, **43**, and **44** (passed via `--override seed=N`).
 
 The following RNG states are seeded:
+
 - `torch.manual_seed(seed)`
 - `torch.cuda.manual_seed_all(seed)` (if GPU)
 - `np.random.seed(seed)`
