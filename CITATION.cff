@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or its failure analysis in your research, please cite it as below."
+title: "PINN vs Split-Step Fourier for the 1D Schrödinger/Gross-Pitaevskii Equation: An Honest Benchmark"
+type: software
+authors:
+  - family-names: "Nidhal"
+    given-names: "Zitouni"
+    alias: "NodeBox-Labs"
+    affiliation: "NodeBox Labs"
+    orcid: "https://orcid.org/0000-0000-0000-0000" # Update if you have one
+repository-code: "https://github.com/NodeBox-Labs/pinn-vs-ssf-schrodinger"
+url: "https://github.com/NodeBox-Labs/pinn-vs-ssf-schrodinger"
+abstract: >-
+  An open-source, reproducible benchmark comparing Physics-Informed Neural Networks (PINNs)
+  against a Strang split-step Fourier reference solver for the 1D Gross-Pitaevskii and
+  Schrödinger equations. The study rigorously documents PINN failure modes (spectral bias,
+  phase accumulation) on solitons and long-time dynamics, providing a controlled baseline
+  for future scientific-ML research.
+keywords:
+  - physics-informed neural networks
+  - pinn
+  - schrodinger equation
+  - gross-pitaevskii equation
+  - split-step fourier
+  - deep learning
+  - scientific machine learning
+  - spectral bias
+license: MIT
+version: "1.0.0"
+date-released: "2026-10-25"

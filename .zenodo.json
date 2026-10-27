@@ -1,0 +1,22 @@
+{
+  "title": "PINN vs Split-Step Fourier for the 1D Schrödinger/GPE: An Honest Benchmark",
+  "description": "An open-source benchmark comparing Physics-Informed Neural Networks (PINNs) against a Strang split-step Fourier reference solver for the 1D Gross-Pitaevskii equation. Rigorously documents PINN failure modes on solitons and long-time dynamics.",
+  "creators": [
+    {
+      "name": "Zitouni, Nidhal",
+      "affiliation": "NodeBox Labs"
+    }
+  ],
+  "keywords": [
+    "physics-informed neural networks",
+    "PDE",
+    "Schrödinger",
+    "Gross-Pitaevskii",
+    "spectral methods",
+    "reproducibility"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "version": "1.0.0"
+}
