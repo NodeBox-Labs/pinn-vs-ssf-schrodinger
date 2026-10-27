@@ -28,6 +28,7 @@ def set_seed(s):
 
 
 def main(config_path: str, overrides: dict | None = None):
+    model = HardConstraintPINN(hidden=cfg["pinn"]["hidden"], layers=cfg["pinn"]["layers"], L=L).to(device)
     cfg = load_config(config_path)
     if overrides:
         # shallow merge overrides into nested dicts
@@ -214,6 +215,41 @@ def _parse_overrides(items):
         out[k] = v
     return out
 
+# ... skip soft BC data creation, since it's hard-coded ...
+
+# 2. Adam Training Loop (Phase 1)
+print("Phase 1: Adam")
+opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+for it in range(1, 5000): # 5000 epochs of Adam
+    idx = torch.randint(0, N_c, (1024,), device=device)
+    x_c = ((torch.rand(1024, 1, device=device) - 0.5) * L)
+    t_c = (torch.rand(1024, 1, device=device) * T)
+    
+    # We must pass psi0 to the model
+    psi0_real_c = ... # compute psi0 at x_c
+    psi0_imag_c = ...
+    
+    Ru, Rv = pde_residual_hard(model, x_c, t_c, V_fn, g, psi0_real_c, psi0_imag_c)
+    loss = (Ru**2 + Rv**2).mean()
+    
+    opt.zero_grad(); loss.backward(); opt.step()
+
+# 3. L-BFGS Training Loop (Phase 2)
+print("Phase 2: L-BFGS")
+lbfgs = torch.optim.LBFGS(model.parameters(), lr=0.1, max_iter=500, history_size=50)
+x_c_lbfgs = ((torch.rand(10000, 1, device=device) - 0.5) * L)
+t_c_lbfgs = (torch.rand(10000, 1, device=device) * T)
+
+def closure():
+    lbfgs.zero_grad()
+    psi0_real_c = ... 
+    psi0_imag_c = ...
+    Ru, Rv = pde_residual_hard(model, x_c_lbfgs, t_c_lbfgs, V_fn, g, psi0_real_c, psi0_imag_c)
+    loss = (Ru**2 + Rv**2).mean()
+    loss.backward()
+    return loss
+
+lbfgs.step(closure)
 
 if __name__ == "__main__":
     args = parse_args()

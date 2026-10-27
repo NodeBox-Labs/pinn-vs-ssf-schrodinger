@@ -16,30 +16,35 @@ class FourierFeatures(nn.Module):
         return torch.cat([torch.sin(proj), torch.cos(proj)], dim=-1)
 
 
-class PINN(nn.Module):
-    """Maps (x, t) -> (Re ψ, Im ψ)."""
-    def __init__(self, hidden=128, layers=4, activation="tanh",
-                 use_fourier=False, fourier_scale=1.0, fourier_dim=128,
-                 seed=0):
+class HardConstraintPINN(nn.Module):
+    def __init__(self, hidden=128, layers=4, L=20.0):
         super().__init__()
-        self.use_fourier = use_fourier
-        in_dim = 2
-        if use_fourier:
-            self.ff = FourierFeatures(2, fourier_dim, fourier_scale, seed=seed)
-            in_dim = 2 * fourier_dim
-        act = {"tanh": nn.Tanh, "sin": torch.sin, "gelu": nn.GELU}[activation]
+        self.L = L
+        
+        # Base network
         mods = []
-        d = in_dim
+        d = 2
         for _ in range(layers):
             mods.append(nn.Linear(d, hidden))
-            mods.append(act() if activation != "sin" else nn.SiLU())
+            mods.append(nn.Tanh())
             d = hidden
         mods.append(nn.Linear(d, 2))
         self.net = nn.Sequential(*mods)
-
-    def forward(self, x, t):
-        z = torch.cat([x, t], dim=-1)
-        if self.use_fourier:
-            z = self.ff(z)
-        out = self.net(z)
-        return out[..., 0:1], out[..., 1:2]
+        
+    def forward(self, x, t, psi0_real, psi0_imag):
+        # 1. Hard Periodic Embedding: forces BCs automatically
+        # Map x in [-L/2, L/2] to angle [0, 2pi]
+        theta = 2.0 * math.pi * x / self.L
+        inputs = torch.cat([torch.sin(theta), torch.cos(theta), t], dim=-1)
+        
+        # 2. Raw network output
+        raw_out = self.net(inputs)
+        u_raw = raw_out[..., 0:1]
+        v_raw = raw_out[..., 1:2]
+        
+        # 3. Hard Initial Condition: psi(x,0) = psi0(x)
+        # Use ansatz: psi(x,t) = psi0(x) + t * N(x,t)
+        u = psi0_real + t * u_raw
+        v = psi0_imag + t * v_raw
+        
+        return u, v

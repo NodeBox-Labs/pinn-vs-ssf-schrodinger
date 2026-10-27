@@ -41,6 +41,22 @@ def test_coherent_state():
     print(f"Coherent state: |<ψ_exact|ψ_num>| = {overlap:.10f}")
     assert overlap > 0.9999, f"coherent state recurrence failed: {overlap}"
 
+def test_soliton_stationarity():
+    L, Nx, T = 40.0, 1024, 4.0
+    x, k = make_grid(L, Nx)
+    dx = x[1] - x[0]
+    
+    # Stationary soliton (v=0)
+    psi0 = initial_condition(x, {"kind": "soliton", "v": 0.0})
+    psi0 = _normalize(psi0, dx)
+    
+    n = 1000
+    _, snaps = split_step(psi0, x, k, T / n, n, np.zeros_like(x), -1.0, snapshot_every=n)
+    psi_final = snaps[-1]
+    
+    err = np.sqrt(np.sum(np.abs(psi_final - psi0) ** 2) * dx)
+    print(f"Soliton stationarity error (t=4): {err:.2e}")
+    assert err < 1e-4, "Soliton is not stationary! Check initial conditions."
 
 if __name__ == "__main__":
     test_free_gaussian()

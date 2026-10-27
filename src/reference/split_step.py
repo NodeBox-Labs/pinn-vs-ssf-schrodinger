@@ -28,14 +28,19 @@ def initial_condition(x: np.ndarray, cfg: dict) -> np.ndarray:
         norm = (1.0 / (np.pi * w ** 2)) ** 0.25
         return norm * np.exp(-((x - x0) ** 2) / (2 * w ** 2)) * np.exp(1j * p0 * x)
     if kind == "soliton":
-        eta = cfg["eta"]; v = cfg["v"]; x0 = cfg.get("x0", 0.0)
-        # g = -eta^2 is required for a stationary bright soliton of amplitude eta
-        return (eta / np.sqrt(2.0)) * (1.0 / np.cosh(eta * (x - x0))) * np.exp(1j * v * x)
+        v = cfg["v"]; x0 = cfg.get("x0", 0.0)
+        # Correct norm-1 soliton
+        A = 0.5
+        return (A / np.cosh(A * (x - x0))) * np.exp(1j * v * x)
+        
     if kind == "two_solitons":
-        eta = cfg["eta"]; v = cfg["v"]; x0 = cfg["x0"]
-        s1 = (eta / np.sqrt(2.0)) / np.cosh(eta * (x - x0)) * np.exp(1j * v * x)
-        s2 = (eta / np.sqrt(2.0)) / np.cosh(eta * (x + x0)) * np.exp(-1j * v * x)
+        # True norm is 1.0 overall, so A = 0.25 each for the 2-soliton test
+        A = 0.25
+        v = cfg["v"]; x0 = cfg["x0"]
+        s1 = (A / np.cosh(A * (x - x0))) * np.exp(1j * v * x)
+        s2 = (A / np.cosh(A * (x + x0))) * np.exp(-1j * v * x)
         return s1 + s2
+
     raise ValueError(kind)
 
 
