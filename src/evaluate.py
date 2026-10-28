@@ -56,8 +56,8 @@ def update_readme_table(csv_path, readme_path):
         # Fallback if `tabulate` is not installed
         md_table = df.to_string(index=False)
 
-    with open(readme_path) as f:
-        content = f.read()
+        with open(readme_path, "r", encoding="utf-8") as f:
+            content = f.read()
 
     start_marker = "<!-- AUTO-GENERATED-RESULTS-START -->"
     end_marker = "<!-- AUTO-GENERATED-RESULTS-END -->"

@@ -9,3 +9,4 @@ initial:
   width: 1.0
 training:
   iters: 30000
+  lr: 1.0e-3
