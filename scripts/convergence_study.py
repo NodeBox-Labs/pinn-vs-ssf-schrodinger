@@ -77,13 +77,26 @@ def main():
     plt.savefig(os.path.join(outdir, "error_vs_Nx.png"), dpi=140)
     plt.close()
 
-    # --- error vs walltime ---
+        # --- error vs walltime ---
+    # NOTE: regenerate walls_s and errs_s using dt loop data to avoid variable reuse.
+    dts_wall = np.array([1e-1, 5e-2, 2.5e-2, 1.25e-2, 6.25e-3, 3.125e-3])
+    errs_s_wall, errs_y_wall, walls_s_wall, walls_y_wall = [], [], [], []
+    for dt in dts_wall:
+        e2, w2 = run_ssf(dt, Nx, order=2)
+        e4, w4 = run_ssf(dt, Nx, order=4)
+        errs_s_wall.append(e2)
+        errs_y_wall.append(e4)
+        walls_s_wall.append(w2)
+        walls_y_wall.append(w4)
+
     plt.figure()
-    plt.loglog(walls_s, errs_s, "-o", label="Strang")
-    plt.loglog(walls_y, errs_y, "-s", label="Yoshida")
-    plt.xlabel("Wall-clock time (s)"); plt.ylabel("Rel-L2 error")
+    plt.loglog(walls_s_wall, errs_s_wall, "-o", label="Strang")
+    plt.loglog(walls_y_wall, errs_y_wall, "-s", label="Yoshida")
+    plt.xlabel("Wall-clock time (s)")
+    plt.ylabel("Rel-L2 error")
     plt.title("Error vs wall time")
-    plt.legend(); plt.grid(True, which="both")
+    plt.legend()
+    plt.grid(True, which="both")
     plt.tight_layout()
     plt.savefig(os.path.join(outdir, "error_vs_walltime.png"), dpi=140)
     plt.close()
