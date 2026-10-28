@@ -39,31 +39,31 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 ### Reference dynamics — what the PINN is trying to learn
 
 <p align="center">
-  <img src="results/figures/case_a_free_gaussian/density_T.png" width="45%" alt="Free Gaussian at T"/>
-  <img src="results/figures/case_b_harmonic_coherent/density_T.png" width="45%" alt="Harmonic coherent at T"/>
+  <img src="docs/images/case_a_free_gaussian/density_T.png" width="45%" alt="Free Gaussian at T"/>
+  <img src="docs/images/case_b_harmonic_coherent/density_T.png" width="45%" alt="Harmonic coherent at T"/>
 </p>
 <p align="center"><em>(a) Free Gaussian packet at T=2 · (b) Harmonic coherent state at one trap period</em></p>
 
 <p align="center">
-  <img src="results/figures/case_d1_bright_soliton/density_T.png" width="45%" alt="Bright soliton at T"/>
-  <img src="results/figures/case_d3_two_soliton_collision/density_T.png" width="45%" alt="Two-soliton collision at T"/>
+  <img src="docs/images/case_d1_bright_soliton/density_T.png" width="45%" alt="Bright soliton at T"/>
+  <img src="docs/images/case_d3_two_soliton_collision/density_T.png" width="45%" alt="Two-soliton collision at T"/>
 </p>
 <p align="center"><em>(d1) Stationary bright soliton · (d3) Two-soliton collision — the PINN smooths and disperses both</em></p>
 
 ### Success case (a) vs. failure case (d1) — side by side
 
 <p align="center">
-  <img src="results/figures/case_a_free_gaussian/error_vs_time.png" width="45%" alt="Free Gaussian error vs t"/>
-  <img src="results/figures/failure/d1_bright_soliton/error_vs_time.png" width="45%" alt="Bright soliton error vs t"/>
+  <img src="docs/images/case_a_free_gaussian/error_vs_time.png" width="45%" alt="Free Gaussian error vs t"/>
+  <img src="docs/images/failure/d1_bright_soliton/error_vs_time.png" width="45%" alt="Bright soliton error vs t"/>
 </p>
 <p align="center"><em>Left: error saturates at ≈1e-2 · Right: error grows monotonically to ≈0.5</em></p>
 
 ### Failure diagnostics for solitons
 
 <p align="center">
-  <img src="results/figures/failure/d1_bright_soliton/loss_curves.png" width="32%" alt="Loss curves"/>
-  <img src="results/figures/failure/d1_bright_soliton/spectral_error.png" width="32%" alt="Spectral error"/>
-  <img src="results/figures/failure/d1_bright_soliton/norm_energy_drift.png" width="32%" alt="Norm and energy drift"/>
+  <img src="docs/images/failure/d1_bright_soliton/loss_curves.png" width="32%" alt="Loss curves"/>
+  <img src="docs/images/failure/d1_bright_soliton/spectral_error.png" width="32%" alt="Spectral error"/>
+  <img src="docs/images/failure/d1_bright_soliton/norm_energy_drift.png" width="32%" alt="Norm and energy drift"/>
 </p>
 <p align="center">
   <em>Left: PDE residual plateaus ~3 orders of magnitude above the target ·
@@ -72,7 +72,7 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 </p>
 
 <p align="center">
-  <img src="results/figures/failure/d3_two_soliton_collision/density_T.png" width="60%" alt="Two-soliton collision, PINN vs ref"/>
+  <img src="docs/images/failure/d3_two_soliton_collision/density_T.png" width="60%" alt="Two-soliton collision, PINN vs ref"/>
 </p>
 <p align="center"><em>d3: the PINN misses the collision-induced peaks entirely; the reference solution shows two clean solitons that have exchanged phase</em></p>
 
@@ -170,7 +170,7 @@ python src/train.py --config configs/case_e_long_time.yaml \
     --override causal_weights=true
 ```
 
-Outputs land in `results/checkpoints/` (`.pt` + `.json` per case), `results/tables/master_results.csv`, and `results/figures/`.
+Outputs land in `results/checkpoints/` (`.pt` + `.json` per case), `results/tables/master_results.csv`, and `docs/images/`.
 
 ---
 
@@ -268,7 +268,7 @@ If we compare the PINN to the Strang split-step Fourier solver used as ground tr
 
 ## Failure analysis
 
-Full discussion in [`results/figures/failure/ANALYSIS.md`](results/figures/failure/ANALYSIS.md). Summary:
+Full discussion in [`docs/images/failure/ANALYSIS.md`](docs/images/failure/ANALYSIS.md). Summary:
 
 1. **Spectral bias.** `tanh`-MLPs learn low-`k` Fourier content first. Bright solitons need high-`k` to resolve the `sech` core. The spectral-error plot shows *excess error power at high k* — the PINN's way of saying it cannot see the soliton's sharpness.
 2. **No causality by default.** Uniform sampling in $(x,t)$ lets the network fit late times before early times. The causal-weight ablation slows but does not prevent the failure.
