@@ -358,7 +358,7 @@ If you use this benchmark, the solver, or the failure analysis in your research,
 
 ```bibtex
 @software{Zitouni2026PINN,
-  author       = {Zitouni, Nidhal},
+  author       = { Nidhal Zitouni},
   title        = {PINN vs Split-Step Fourier for the 1D Schrödinger/GPE: An Honest Benchmark},
   month        = oct,
   year         = 2026,
