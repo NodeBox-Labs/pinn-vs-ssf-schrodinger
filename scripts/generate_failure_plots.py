@@ -14,10 +14,14 @@ from src.metrics import spectral_error
 
 def load_case(results_dir, name):
     import torch
-    path = os.path.join(results_dir, f"{name}.pt")
-    ck = torch.load(path, map_location="cpu")
+    import glob
+    # Look for the first matching seed file
+    paths = glob.glob(os.path.join(results_dir, f"{name}_seed*.pt"))
+    if not paths:
+        raise FileNotFoundError(f"No checkpoint found for {name}")
+    path = sorted(paths)[0]  # Sort to pick seed 42 first if it exists
+    ck = torch.load(path, map_location="cpu", weights_only=False)
     return ck
-
 
 def plot_case(ck, outdir):
     os.makedirs(outdir, exist_ok=True)
