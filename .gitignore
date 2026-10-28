@@ -2,3 +2,6 @@ results/checkpoints/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+# Ignore generated figures and plots
+results/figures/
+results/checkpoints/
