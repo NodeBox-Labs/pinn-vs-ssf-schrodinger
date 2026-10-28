@@ -1,0 +1,2 @@
+case,n_seeds,rel_l2_final_mean,rel_l2_final_std,norm_drift_max_mean,norm_drift_max_std,energy_drift_max_mean,energy_drift_max_std,train_time_mean,verdict
+a_free_gaussian,3,0.6680180963173483,5.008910316189333e-05,0.00011018415292104085,3.868730665285416e-05,0.00019535103114520772,8.035211253992323e-05,164.8384167353312,FAIL
