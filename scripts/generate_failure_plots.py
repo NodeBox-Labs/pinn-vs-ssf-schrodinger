@@ -93,7 +93,15 @@ def main(results_dir, cases, outroot):
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--results_dir", default="results/checkpoints")
-    p.add_argument("--cases", nargs="+", required=True)
-    p.add_argument("--outroot", default="results/figures/failure")
+    p.add_argument("--cases", nargs="+", default=[
+        "a_free_gaussian",
+        "b_harmonic_coherent",
+        "c_gpe_harmonic",
+        "d1_bright_soliton",
+        "d2_moving_soliton",
+        "d3_two_soliton_collision",
+        "e_long_time"
+    ])
+    p.add_argument("--outroot", default="results/figures")
     a = p.parse_args()
     main(a.results_dir, a.cases, a.outroot)
