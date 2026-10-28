@@ -1,6 +1,8 @@
 import math
+
 import torch
 import torch.nn as nn
+
 
 class FourierFeatures(nn.Module):
     def __init__(self, in_dim: int, n_features: int, scale: float, seed: int = 0):
@@ -23,7 +25,7 @@ class HardBCPINN(nn.Module):
         if use_fourier:
             self.ff = FourierFeatures(3, fourier_dim, fourier_scale, seed=seed)
             in_dim = 2 * fourier_dim
-            
+
         act_cls = {"tanh": nn.Tanh, "sin": nn.SiLU, "gelu": nn.GELU}[activation]
         mods = []
         d = in_dim

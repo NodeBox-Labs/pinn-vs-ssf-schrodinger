@@ -6,6 +6,7 @@ import time
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,7 +21,7 @@ def run_ssf(dt, Nx, T=2.0, L=20.0, order=2):
     dx = x[1] - x[0]
     psi0 = free_gaussian(x, 0.0, x0=0.0, k0=1.0, sigma=1.0)
     psi0 = _normalize(psi0, dx)
-    
+
     n = int(round(T / dt))
     t0 = time.time()
     if order == 2:
@@ -29,17 +30,17 @@ def run_ssf(dt, Nx, T=2.0, L=20.0, order=2):
         _, snaps = split_step_yoshida(psi0, x, k, dt, n, np.zeros_like(x), 0.0, snapshot_every=n)
     wall = time.time() - t0
     psi_num = snaps[-1]
-    
+
     # Reference: same solver at very high resolution
     x_hi, k_hi = make_grid(L, 4096)
     psi0_hi = _normalize(free_gaussian(x_hi, 0.0, x0=0.0, k0=1.0, sigma=1.0), x_hi[1]-x_hi[0])
     n_hi = int(round(T / 1e-4))
     _, snaps_hi = split_step(psi0_hi, x_hi, k_hi, 1e-4, n_hi, np.zeros_like(x_hi), 0.0, snapshot_every=n_hi)
     psi_ref_hi = snaps_hi[-1]
-    
+
     # Interpolate to comparison grid
     psi_ref = np.interp(x, x_hi, psi_ref_hi.real) + 1j * np.interp(x, x_hi, psi_ref_hi.imag)
-    
+
     err = np.sqrt(np.sum(np.abs(psi_num - psi_ref)**2) * dx)
     return err, wall
 

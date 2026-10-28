@@ -83,7 +83,7 @@ def main(config_path: str, overrides: dict | None = None):
     x_ic_np = np.linspace(-L/2, L/2, N_ic)
     u0_np = np.interp(x_ic_np, x_ref, psi_ref[0].real)
     v0_np = np.interp(x_ic_np, x_ref, psi_ref[0].imag)
-    
+
     x_ic = torch.tensor(x_ic_np, dtype=torch.float32, device=device).unsqueeze(-1)
     t_ic = torch.zeros_like(x_ic)
     u0 = torch.tensor(u0_np, dtype=torch.float32, device=device).unsqueeze(-1)
@@ -140,10 +140,10 @@ def main(config_path: str, overrides: dict | None = None):
         lbfgs.zero_grad()
         Ru, Rv = pde_residual(model, x_l, t_l, V_fn, g)
         L_pde = (Ru**2 + Rv**2).mean()
-        
+
         u_ic_l, v_ic_l = model(x_ic, t_ic)
         L_ic = ((u_ic_l - u0)**2 + (v_ic_l - v0)**2).mean()
-        
+
         loss = L_pde + lambda_ic * L_ic
         loss.backward()
         return loss
@@ -169,10 +169,10 @@ def main(config_path: str, overrides: dict | None = None):
     inference_time = time.time() - t_inf0
 
     errs = [rel_l2(preds[i], psi_ref[i], dx) for i in range(len(t_ref))]
-    
+
     expected_norm = 2.0 if "soliton" in cfg["initial"]["kind"] else 1.0
     norm_drift = [abs(norm_sq(preds[i], dx) - expected_norm) / expected_norm for i in range(len(t_ref))]
-    
+
     E_ref0 = energy(psi_ref[0], x_ref, np.fft.fftfreq(len(x_ref), dx) * 2 * np.pi, V_ref, g, dx)
     E_pred = [energy(preds[i], x_ref, np.fft.fftfreq(len(x_ref), dx) * 2 * np.pi, V_ref, g, dx) for i in range(len(t_ref))]
     energy_drift = [abs(e - E_ref0) / max(abs(E_ref0), 1e-12) for e in E_pred]
