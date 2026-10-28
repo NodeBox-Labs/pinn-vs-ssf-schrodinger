@@ -10,7 +10,7 @@ import torch
 import yaml
 
 from src.metrics import rel_l2
-from src.pinn.model import PINN
+from src.pinn.model import HardBCPINN
 from src.reference.split_step import reference_solution
 
 
@@ -47,7 +47,8 @@ def main(config_path):
     u_tr = torch.tensor(np.concatenate(us), dtype=torch.float32, device=device).unsqueeze(-1)
     v_tr = torch.tensor(np.concatenate(vs), dtype=torch.float32, device=device).unsqueeze(-1)
 
-    model = PINN(
+    model = HardBCPINN(
+        L=cfg["domain"]["L"],
         hidden=cfg["pinn"]["hidden"],
         layers=cfg["pinn"]["layers"],
         activation=cfg["pinn"]["activation"],
