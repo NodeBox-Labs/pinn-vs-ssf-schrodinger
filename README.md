@@ -223,7 +223,7 @@ with $V_{\text{eff}} = V(x) + g|\psi|^2$ evaluated at each half-step. Second-ord
 | **a.** Free Gaussian | 0 | 0 | $\pi^{-1/4}e^{-x^2/2}$ | 2 | $L{=}20$, $N_x{=}512$ |
 | **b.** Harmonic coherent | $\tfrac{1}{2}x^2$ | 0 | Coherent state, $x_0{=}2$ | $4\pi$ | $L{=}16$, $N_x{=}512$ |
 | **c.** GPE harmonic trap | $\tfrac{1}{2}x^2$ | $+1$ | Gaussian, $w{=}1.2$ | 4 | $L{=}16$, $N_x{=}512$ |
-| **d1.** Bright soliton | 0 | $-1$ | $\tfrac{1}{\sqrt2}\operatorname{sech}(x/2)$ | 4 | $L{=}40$, $N_x{=}1024$ |
+| **d1.** Bright soliton | 0 | $-1$ | $\tfrac{1}{\sqrt2}\mathrm{sech}(x/2)$ | 4 | $L{=}40$, $N_x{=}1024$ |
 | **d2.** Moving soliton | 0 | $-1$ | Same, $v{=}1$ | 4 | $L{=}40$, $N_x{=}1024$ |
 | **d3.** Two-soliton collision | 0 | $-1$ | Two solitons at $x{\pm}3$, $v{\pm}0.5$ | 8 | $L{=}60$, $N_x{=}1024$ |
 | **e.** Long-time free packet | 0 | 0 | Gaussian | 20 ($10\times T_a$) | $L{=}40$, $N_x{=}1024$ |
