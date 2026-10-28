@@ -1,8 +1,9 @@
 """Windows-native equivalent of scripts/run_all.sh."""
+import glob
+import os
 import subprocess
 import sys
-import os
-import glob
+
 
 def run(cmd):
     print(f"\n>>> {' '.join(cmd)}")
