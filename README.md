@@ -133,14 +133,15 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 │   ├── train.py                 # main training script
 │   └── evaluate.py              # builds master_results.csv
 ├── scripts/
-│   ├── run_all.sh
+│   ├── run_all.py
 │   └── generate_failure_plots.py
 ├── tests/
 │   └── test_reference_convergence.py
 └── results/
     ├── tables/master_results.csv
-    ├── figures/{case_*,failure_*}/
-    └── checkpoints/
+    ├── figures/                 # Ignored by git (generated locally)
+    └── checkpoints/             # Ignored by git (generated locally)
+
 ```
 
 ---
