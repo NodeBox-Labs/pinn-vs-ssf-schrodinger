@@ -83,7 +83,7 @@ def main(config_path: str, overrides: dict | None = None):
     x_ic_np = np.linspace(-L/2, L/2, N_ic)
     u0_np = np.interp(x_ic_np, x_ref, psi_ref[0].real)
     v0_np = np.interp(x_ic_np, x_ref, psi_ref[0].imag)
-    
+
     x_ic = torch.tensor(x_ic_np, dtype=torch.float32, device=device).unsqueeze(-1)
     t_ic = torch.zeros_like(x_ic)
     u0 = torch.tensor(u0_np, dtype=torch.float32, device=device).unsqueeze(-1)
