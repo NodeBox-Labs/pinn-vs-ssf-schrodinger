@@ -40,40 +40,32 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 ### Reference dynamics — what the PINN is trying to learn
 
-![Free Gaussian at T](docs/images/density_T.png)
-*(a) Free Gaussian packet at T=2*
+| (a) Free Gaussian packet at T=2 | (b) Harmonic coherent state at one trap period |
+|:---:|:---:|
+| ![Free Gaussian](docs/images/density_T.png) | ![Harmonic coherent](docs/images/density_T.png) |
 
-![Harmonic coherent at T](docs/images/density_T.png)
-*(b) Harmonic coherent state at one trap period*
-
-![Bright soliton at T](docs/images/density_T.png)
-*(d1) Stationary bright soliton*
-
-![Two-soliton collision at T](docs/images/density_T.png)
-*(d3) Two-soliton collision — the PINN smooths and disperses both*
+| (d1) Stationary bright soliton | (d3) Two-soliton collision |
+|:---:|:---:|
+| ![Bright soliton](docs/images/density_T.png) | ![Two-soliton collision](docs/images/density_T.png) |
+| *PINN smooths and disperses* | *PINN misses the collision peaks* |
 
 ---
 
 ### Success case (a) vs. failure case (d1) — side by side
 
-![Free Gaussian error vs t](docs/images/error_vs_time.png)
-*Left: error saturates at ≈1e-2*
-
-![Bright soliton error vs t](docs/images/error_vs_time.png)
-*Right: error grows monotonically to ≈0.5*
+| Free Gaussian (Success) | Bright soliton (Failure) |
+|:---:|:---:|
+| ![Free Gaussian error](docs/images/error_vs_time.png) | ![Bright soliton error](docs/images/error_vs_time.png) |
+| *Error saturates at ≈1e-2* | *Error grows monotonically to ≈0.5* |
 
 ---
 
 ### Failure diagnostics for solitons
 
-![Loss curves](docs/images/loss_curves.png)
-*Left: PDE residual plateaus ~3 orders of magnitude above the target*
-
-![Spectral error](docs/images/spectral_error.png)
-*Middle: error power concentrated at high wavenumbers (spectral bias)*
-
-![Norm and energy drift](docs/images/norm_energy_drift.png)
-*Right: norm and energy drift O(10⁻¹)*
+| Loss curves | Spectral error | Norm and energy drift |
+|:---:|:---:|:---:|
+| ![Loss curves](docs/images/loss_curves.png) | ![Spectral error](docs/images/spectral_error.png) | ![Norm and energy drift](docs/images/norm_energy_drift.png) |
+| *PDE residual plateaus* | *Spectral bias at high k* | *Drift O(10⁻¹)* |
 
 ![Two-soliton collision, PINN vs ref](docs/images/density_T.png)
 *d3: the PINN misses the collision-induced peaks entirely; the reference solution shows two clean solitons that have exchanged phase*
