@@ -66,7 +66,7 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 | Loss curves | Spectral error | Norm and energy drift |
 |:---:|:---:|:---:|
-| ![Loss curves](docs/images/case_d3_loss.png) | ![Spectral error](docs/images/case_d3_spectral.png) | ![Norm and energy drift](docs/images/case_d3_drift.png) |
+| ![Loss curves](docs/images/case_d1_loss.png) | ![Spectral error](docs/images/case_d3_spectral.png) | ![Norm and energy drift](docs/images/case_d3_drift.png) |
 | *PDE residual plateaus* | *Spectral bias at high k* | *Drift O(10⁻¹)* |
 ---
 
