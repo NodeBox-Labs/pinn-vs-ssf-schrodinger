@@ -36,6 +36,8 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 ---
 
+---
+
 ## Gallery
 
 ### Reference dynamics — what the PINN is trying to learn
@@ -60,15 +62,12 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 ---
 
-### Failure diagnostics for solitons
+### Failure diagnostics for solitons (d3)
 
 | Loss curves | Spectral error | Norm and energy drift |
 |:---:|:---:|:---:|
 | ![Loss curves](docs/images/loss_curves.png) | ![Spectral error](docs/images/spectral_error.png) | ![Norm and energy drift](docs/images/norm_energy_drift.png) |
 | *PDE residual plateaus* | *Spectral bias at high k* | *Drift O(10⁻¹)* |
-
-![Two-soliton collision, PINN vs ref](docs/images/density_T.png)
-*d3: the PINN misses the collision-induced peaks entirely; the reference solution shows two clean solitons that have exchanged phase*
 
 > **Note on figures.** Every plot above is produced by `scripts/generate_failure_plots.py`. If any image is missing, run `python scripts/run_all.py` — figures regenerate deterministically with `seed: 42`.
 
