@@ -44,11 +44,11 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 | (a) Free Gaussian packet at T=2 | (b) Harmonic coherent state at one trap period |
 |:---:|:---:|
-| ![Free Gaussian](docs/images/density_T.png) | ![Harmonic coherent](docs/images/density_T.png) |
+| ![Free Gaussian](docs/images/case_a_density.png) | ![Harmonic coherent](docs/images/case_b_density.png) |
 
 | (d1) Stationary bright soliton | (d3) Two-soliton collision |
 |:---:|:---:|
-| ![Bright soliton](docs/images/density_T.png) | ![Two-soliton collision](docs/images/density_T.png) |
+| ![Bright soliton](docs/images/case_d1_density.png) | ![Two-soliton collision](docs/images/case_d3_density.png) |
 | *PINN smooths and disperses* | *PINN misses the collision peaks* |
 
 ---
@@ -57,7 +57,7 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 | Free Gaussian (Success) | Bright soliton (Failure) |
 |:---:|:---:|
-| ![Free Gaussian error](docs/images/error_vs_time.png) | ![Bright soliton error](docs/images/error_vs_time.png) |
+| ![Free Gaussian error](docs/images/case_a_error.png) | ![Bright soliton error](docs/images/case_d1_error.png) |
 | *Error saturates at ≈1e-2* | *Error grows monotonically to ≈0.5* |
 
 ---
@@ -66,12 +66,8 @@ $$i\,\partial_t \psi = \Big[-\tfrac{1}{2}\partial_x^2 + V(x) + g|\psi|^2\Big]\ps
 
 | Loss curves | Spectral error | Norm and energy drift |
 |:---:|:---:|:---:|
-| ![Loss curves](docs/images/loss_curves.png) | ![Spectral error](docs/images/spectral_error.png) | ![Norm and energy drift](docs/images/norm_energy_drift.png) |
+| ![Loss curves](docs/images/case_d3_loss.png) | ![Spectral error](docs/images/case_d3_spectral.png) | ![Norm and energy drift](docs/images/case_d3_drift.png) |
 | *PDE residual plateaus* | *Spectral bias at high k* | *Drift O(10⁻¹)* |
-
-> **Note on figures.** Every plot above is produced by `scripts/generate_failure_plots.py`. If any image is missing, run `python scripts/run_all.py` — figures regenerate deterministically with `seed: 42`.
-
----
 ---
 
 ### Table of contents
