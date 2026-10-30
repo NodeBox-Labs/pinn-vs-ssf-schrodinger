@@ -83,7 +83,7 @@ def main(config_path: str, overrides: dict | None = None):
     x_ic_np = np.linspace(-L/2, L/2, N_ic)
     u0_np = np.interp(x_ic_np, x_ref, psi_ref[0].real)
     v0_np = np.interp(x_ic_np, x_ref, psi_ref[0].imag)
-
+    
     x_ic = torch.tensor(x_ic_np, dtype=torch.float32, device=device).unsqueeze(-1)
     t_ic = torch.zeros_like(x_ic)
     u0 = torch.tensor(u0_np, dtype=torch.float32, device=device).unsqueeze(-1)
@@ -91,6 +91,9 @@ def main(config_path: str, overrides: dict | None = None):
 
     print(f"[{cfg['case']}] training PINN ({n_params} params) ...")
     t_start = time.time()
+
+    # Initialize history dictionary
+    history = {"iter": [], "loss": [], "pde": [], "ic": []}
 
     # ==========================================
     # PHASE 1: Adam
@@ -121,6 +124,13 @@ def main(config_path: str, overrides: dict | None = None):
         opt.step()
         sched.step()
 
+        # Record history
+        if it % 100 == 0:
+            history["iter"].append(it)
+            history["loss"].append(float(loss.item()))
+            history["pde"].append(float(L_pde.item()))
+            history["ic"].append(float(L_ic.item()))
+
         if it % 1000 == 0:
             print(f"    Adam it {it:5d} | PDE Loss: {L_pde.item():.3e} | IC Loss: {L_ic.item():.3e}")
 
@@ -132,7 +142,7 @@ def main(config_path: str, overrides: dict | None = None):
                               history_size=50, line_search_fn="strong_wolfe")
 
     # Fixed collocation set for L-BFGS
-    N_lbfgs = 5000
+    N_lbfgs = 2000
     x_l = (torch.rand(N_lbfgs, 1, device=device) - 0.5) * L
     t_l = torch.rand(N_lbfgs, 1, device=device) * T
 
@@ -184,6 +194,7 @@ def main(config_path: str, overrides: dict | None = None):
         "norm_drift_max": max(norm_drift), "energy_drift_final": energy_drift[-1],
         "energy_drift_max": max(energy_drift),
         "t": t_ref.tolist(), "rel_l2_t": errs, "norm_drift_t": norm_drift, "energy_drift_t": energy_drift,
+        "history": history,  # <--- Saved here!
     }
 
     ckpt_dir = cfg["output"]["ckpt_dir"]
